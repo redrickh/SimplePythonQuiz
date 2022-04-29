@@ -1,7 +1,8 @@
 import random
 import pandas as pd
+import sys
 import ast
-from keyboard import press
+sys.setrecursionlimit(10000)
 pd.options.mode.chained_assignment = None  # default='warn'
 
 """We need one excel file(kerdesek.xlsx), then we will add questions from A1 to x1 columns (B1,C1 etc...).
@@ -16,8 +17,11 @@ answer3    ....       ....
 answer4    answer4     ....
 """
 
+wrong_guess = 0
+
 
 class Main:
+ 
     def quiz(self):
         df = pd.read_excel("kerdesek.xlsx")  # reading our xlsx
         question_numbers = len(df.columns)
@@ -32,32 +36,36 @@ class Main:
         x.sort()
         while self.randomvalue in x:
             self.randomvalue = random.randint(0, question_number)
+
             if x == range_number:
                 new_game = input("Nincs több kérdés. Újra játszol? y/n: ")
-                if new_game == "y" or "yes" or "igen" or "i" or press("enter"):
+                if new_game == "y":
                     self.new_game()
                 else:
-                    quit()
+                    exit()
                 break
-                
+
         df2 = df.iloc[0:, self.randomvalue]  # choosing columns and listing
         random.shuffle(df2)  # randomize list
         df3 = pd.read_excel("kerdesek.xlsx")
-        inputChoice = df3.iloc[:, self.randomvalue].head(
-            1)  # choosing from the original column and also choosing the fist row(answer)
+        inputChoice = df3.iloc[:, self.randomvalue].head(1).values
+        inputChoice = str(inputChoice).replace("[", "").replace("]", "").replace("'", "").replace("'", "")
         question_ask = df2  # randomized question list
-        # print(str(inputChoice))
         print("Válaszok:--------------")
         print(question_ask)  # Printing df2 var. random column list
         print("---------------------")
-        choosing = str(input("Válasz: "))  # user input
-        if choosing in str(
-                inputChoice):  # if the inputChoice value is in the user input value, then the answer is correct
-            print("Helyes")
+        choosing = str(input("Válasz: ")) # user input
+        if choosing == str(inputChoice):  # if the inputChoice value is in the user input value, then the answer is correct
+            print("Helyes válasz!")
             self.already_asked()
             return self.quiz
         else:
-            print("Helytelen")  # it wasn't correct whops
+            print("Rossz válasz:")
+            global wrong_guess
+            wrong_guess += 1
+            print("Rossz válaszok: ", + wrong_guess)
+            self.already_asked()
+            return self.quiz
 
     def already_asked(self):
         self.save_it = open("numbers.txt", "a")
@@ -71,5 +79,5 @@ class Main:
         return self.quiz
 
 
-my_object = Main()
-my_object.quiz()
+build = Main()
+build.quiz()
