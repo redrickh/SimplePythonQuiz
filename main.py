@@ -46,12 +46,12 @@ class Main:
                     exit()
                 break
 
-        df2 = df.iloc[0:, self.randomvalue]  # choosing columns and listing
-        random.shuffle(df2)  # randomize list
-        df3 = pd.read_excel("kerdesek.xlsx")
-        inputChoice = df3.iloc[:, self.randomvalue].head(1).values  # correct answer in head(1)
+        random_column_listing = df.iloc[0:, self.randomvalue]  # choosing columns and listing
+        random.shuffle(random_column_listing)  # randomize list
+        correct_answer = pd.read_excel("kerdesek.xlsx")  #reading the correct answer from it (row 1)
+        inputChoice = correct_answer.iloc[:, self.randomvalue].head(1).values  # correct answer in head(1)
         inputChoice = str(inputChoice).replace("[", "").replace("]", "").replace("'", "").replace("'", "")
-        question_ask = df2  # randomized question list
+        question_ask = random_column_listing  # randomized question list
         print("Válaszok:--------------")
         print(question_ask)  # Printing df2 var. random column list
         print("---------------------")
