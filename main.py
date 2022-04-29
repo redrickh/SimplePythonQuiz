@@ -28,7 +28,7 @@ def result():
 class Main:
 
     def quiz(self):
-        df = pd.read_excel("kerdesek.xlsx")  # reading our xlsx
+        df = pd.read_excel("kerdesek.xlsx", engine="odf")  # reading our xlsx
         question_numbers = len(df.columns)  # column count in our xlsx
         question_number = int(question_numbers - 1)
         self.randomvalue = random.randint(0, question_number)  # random number between our column number
@@ -53,7 +53,7 @@ class Main:
 
         random_column_listing = df.iloc[0:, self.randomvalue]  # choosing columns and listing
         random.shuffle(random_column_listing)  # randomize list
-        correct_answer = pd.read_excel("kerdesek.xlsx")  # reading the correct answer from it (row 1)
+        correct_answer = pd.read_excel("kerdesek.xlsx", engine="odf")  # reading the correct answer from it (row 1)
         inputChoice = correct_answer.iloc[:, self.randomvalue].head(1).values  # correct answer in head(1)
         inputChoice = str(inputChoice).replace("[", "").replace("]", "").replace("'", "").replace("'", "")
         question_ask = random_column_listing  # randomized question list
