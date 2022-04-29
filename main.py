@@ -18,10 +18,11 @@ answer4    answer4     ....
 """
 
 wrong_guess = 0
+good_guess = 0
 
 
 class Main:
- 
+
     def quiz(self):
         df = pd.read_excel("kerdesek.xlsx")  # reading our xlsx
         question_numbers = len(df.columns)
@@ -58,14 +59,18 @@ class Main:
         if choosing == str(inputChoice):  # if the inputChoice value is in the user input value, then the answer is correct
             print("Helyes válasz!")
             self.already_asked()
-            return self.quiz
+            global good_guess
+            good_guess += 1
+            print("Helyes válaszok:", good_guess)
+            return build.quiz()
         else:
-            print("Rossz válasz:")
+            self.already_asked()
+            print("Rossz válasz. Helyes megoldás: " + inputChoice)
             global wrong_guess
             wrong_guess += 1
-            print("Rossz válaszok: ", + wrong_guess)
-            self.already_asked()
-            return self.quiz
+            print("Hibás válaszok:", + wrong_guess)
+
+            return build.quiz()
 
     def already_asked(self):
         self.save_it = open("numbers.txt", "a")
@@ -76,8 +81,9 @@ class Main:
     def new_game(self):
         txt = open("numbers.txt", "w")
         txt.write("")
-        return self.quiz
+        return 
 
 
 build = Main()
 build.quiz()
+
