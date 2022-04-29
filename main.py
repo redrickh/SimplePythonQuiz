@@ -6,7 +6,7 @@ sys.setrecursionlimit(10000)
 pd.options.mode.chained_assignment = None  # default='warn'
 
 """We need one excel file(kerdesek.xlsx), then we will add questions from A1 to x1 columns (B1,C1 etc...).
-Our answers will be right below them.The correct answer will always be the second row(B2, C2 etc...). 
+Our answers will be right below them. The correct answer will always be in the second row(B2, C2 etc...). 
 We will shuffle them later, so it won't be in the same position when we print them to the user. 
 In this code we can write four answers down.
 So it will look like something like this:
@@ -25,21 +25,21 @@ class Main:
 
     def quiz(self):
         df = pd.read_excel("kerdesek.xlsx")  # reading our xlsx
-        question_numbers = len(df.columns)
+        question_numbers = len(df.columns)  # column count in our xlsx
         question_number = int(question_numbers - 1)
-        self.randomvalue = random.randint(0, question_number)
+        self.randomvalue = random.randint(0, question_number)  # random number between our column number
 
         with open("numbers.txt", "r") as c:
             x = c.readlines()  # read into a list
-            x = [ast.literal_eval(x[i].rstrip('\n')) for i in range(len(x))]
+            x = [ast.literal_eval(x[i].rstrip('\n')) for i in range(len(x))]  # numbers in number.txt
 
-        range_number = list(range(0, question_number + 1))
+        range_number = list(range(0, question_number + 1))  # making a list with all of our column numbers
         x.sort()
-        while self.randomvalue in x:
-            self.randomvalue = random.randint(0, question_number)
+        while self.randomvalue in x:  # if the current random number is already in numbers.txt
+            self.randomvalue = random.randint(0, question_number)  # making a new random number, until it doesn't
 
-            if x == range_number:
-                new_game = input("Nincs több kérdés. Újra játszol? y/n: ")
+            if x == range_number:  # if every question asked, then
+                new_game = input("Nincs több kérdés. Újra játszol? y/n: ")  # asking if the user want to play again
                 if new_game == "y":
                     self.new_game()
                 else:
@@ -49,15 +49,15 @@ class Main:
         df2 = df.iloc[0:, self.randomvalue]  # choosing columns and listing
         random.shuffle(df2)  # randomize list
         df3 = pd.read_excel("kerdesek.xlsx")
-        inputChoice = df3.iloc[:, self.randomvalue].head(1).values
+        inputChoice = df3.iloc[:, self.randomvalue].head(1).values  # correct answer in head(1)
         inputChoice = str(inputChoice).replace("[", "").replace("]", "").replace("'", "").replace("'", "")
         question_ask = df2  # randomized question list
         print("Válaszok:--------------")
         print(question_ask)  # Printing df2 var. random column list
         print("---------------------")
-        choosing = str(input("Válasz: ")) # user input
-        if choosing == str(inputChoice):  # if the inputChoice value is in the user input value, then the answer is correct
-            print("Helyes válasz!")
+        choosing = str(input("Válasz: "))  # user input
+        if choosing == str(inputChoice):  # if the inputChoice value is equal with user input, then
+            print("Helyes válasz!")  # the answer is correct.
             self.already_asked()
             global good_guess
             good_guess += 1
@@ -65,7 +65,7 @@ class Main:
             return build.quiz()
         else:
             self.already_asked()
-            print("Rossz válasz. Helyes megoldás: " + inputChoice)
+            print("Rossz válasz. Helyes megoldás: " + inputChoice)  # wrong answer
             global wrong_guess
             wrong_guess += 1
             print("Hibás válaszok:", + wrong_guess)
@@ -73,17 +73,17 @@ class Main:
             return build.quiz()
 
     def already_asked(self):
-        self.save_it = open("numbers.txt", "a")
+        self.save_it = open("numbers.txt", "a")   # new text file, where we save our random column numbers
         self.save_it.write(str(self.randomvalue))
         self.save_it.write("\n")
         self.save_it.close()
 
-    def new_game(self):
+    @staticmethod
+    def new_game():  # clearing it
         txt = open("numbers.txt", "w")
         txt.write("")
-        return 
+        return
 
 
 build = Main()
 build.quiz()
-
