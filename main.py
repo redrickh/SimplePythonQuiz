@@ -1,9 +1,6 @@
 import random
 import pandas as pd
-import sys
 import ast
-sys.setrecursionlimit(10000)
-pd.options.mode.chained_assignment = None  # default='warn'
 
 """We need one excel file(kerdesek.xlsx), then we will add questions from A1 to x1 columns (B1,C1 etc...).
 Our answers will be right below them. The correct answer will always be in the second row(B2, C2 etc...). 
@@ -19,6 +16,13 @@ answer4    answer4     ....
 
 wrong_guess = 0
 good_guess = 0
+
+
+def result():
+    print("-----------------------------")
+    print("Végeredmény:")
+    print("Helyes válasz:", good_guess)
+    print("Rossz válasz:", wrong_guess)
 
 
 class Main:
@@ -37,9 +41,10 @@ class Main:
         x.sort()
         while self.randomvalue in x:  # if the current random number is already in numbers.txt
             self.randomvalue = random.randint(0, question_number)  # making a new random number, until it doesn't
-
             if x == range_number:  # if every question asked, then
-                new_game = input("Nincs több kérdés. Újra játszol? y/n: ")  # asking if the user want to play again
+                result()
+                new_game = input("""----------------------------- \nNincs több kérdés. Újra játszol? y/n: """)
+                # asking if the user want to play again
                 if new_game == "y":
                     self.new_game()
                 else:
@@ -48,27 +53,27 @@ class Main:
 
         random_column_listing = df.iloc[0:, self.randomvalue]  # choosing columns and listing
         random.shuffle(random_column_listing)  # randomize list
-        correct_answer = pd.read_excel("kerdesek.xlsx")  #reading the correct answer from it (row 1)
+        correct_answer = pd.read_excel("kerdesek.xlsx")  # reading the correct answer from it (row 1)
         inputChoice = correct_answer.iloc[:, self.randomvalue].head(1).values  # correct answer in head(1)
         inputChoice = str(inputChoice).replace("[", "").replace("]", "").replace("'", "").replace("'", "")
         question_ask = random_column_listing  # randomized question list
-        print("Válaszok:--------------")
+        print("Lehetséges válaszok:---------")
         print(question_ask)  # Printing df2 var. random column list
-        print("---------------------")
+        print("-----------------------------")
         choosing = str(input("Válasz: "))  # user input
         if choosing == str(inputChoice):  # if the inputChoice value is equal with user input, then
             print("Helyes válasz!")  # the answer is correct.
             self.already_asked()
             global good_guess
             good_guess += 1
-            print("Helyes válaszok:", good_guess)
+            print("Helyes válasz:", good_guess)
             return build.quiz()
         else:
             self.already_asked()
             print("Rossz válasz. Helyes megoldás: " + inputChoice)  # wrong answer
             global wrong_guess
             wrong_guess += 1
-            print("Hibás válaszok:", + wrong_guess)
+            print("Hibás válasz:", + wrong_guess)
 
             return build.quiz()
 
