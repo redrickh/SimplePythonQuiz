@@ -1,6 +1,7 @@
-import random
 import pandas as pd
 import ast
+import random
+
 
 """We need one excel file(kerdesek.xlsx), then we will add questions from A1 to x1 columns (B1,C1 etc...).
 Our answers will be right below them. The correct answer will always be in the second row(B2, C2 etc...). 
@@ -28,6 +29,7 @@ def result():
 class Main:
 
     def quiz(self):
+
         df = pd.read_excel("kerdesek.xlsx", engine="odf")  # reading our xlsx
         question_numbers = len(df.columns)  # column count in our xlsx
         question_number = int(question_numbers - 1)
@@ -56,11 +58,12 @@ class Main:
         correct_answer = pd.read_excel("kerdesek.xlsx", engine="odf")  # reading the correct answer from it (row 1)
         inputChoice = correct_answer.iloc[:, self.randomvalue].head(1).values  # correct answer in head(1)
         inputChoice = str(inputChoice).replace("[", "").replace("]", "").replace("'", "").replace("'", "")
-        question_ask = random_column_listing  # randomized question list
+        self.question_ask = random_column_listing  # randomized question list
         print("Lehetséges válaszok:---------")
-        print(question_ask)  # Printing df2 var. random column list
+        print(self.question_ask)  # Printing df2 var. random column list
         print("-----------------------------")
         choosing = str(input("Válasz: "))  # user input
+
         if choosing == str(inputChoice):  # if the inputChoice value is equal with user input, then
             print("Helyes válasz!")  # the answer is correct.
             self.already_asked()
@@ -74,11 +77,15 @@ class Main:
             global wrong_guess
             wrong_guess += 1
             print("Hibás válasz:", + wrong_guess)
-
+            if wrong_guess == 3:
+                print("""-----------------------------
+                Hármat hibáztál. Újra kell keznened.""")
+                wrong_guess = 0
+                self.new_game()
             return build.quiz()
 
     def already_asked(self):
-        self.save_it = open("numbers.txt", "a")   # new text file, where we save our random column numbers
+        self.save_it = open("numbers.txt", "a")  # new text file, where we save our random column numbers
         self.save_it.write(str(self.randomvalue))
         self.save_it.write("\n")
         self.save_it.close()
