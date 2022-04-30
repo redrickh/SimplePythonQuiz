@@ -48,6 +48,7 @@ class Main:
                 new_game = input("""----------------------------- \nNincs több kérdés. Újra játszol? y/n: """)
                 # asking if the user want to play again
                 if new_game == "y":
+                    self.guess_restart()
                     self.new_game()
                 else:
                     exit()
@@ -79,7 +80,7 @@ class Main:
             print("Hibás válasz:", + wrong_guess)
             if wrong_guess == 3:
                 print("""-----------------------------
-                Hármat hibáztál. Újra kell keznened.""")
+                Hármat hibáztál. Újra kell kezdened.""")
                 wrong_guess = 0
                 self.new_game()
             return build.quiz()
@@ -89,6 +90,13 @@ class Main:
         self.save_it.write(str(self.randomvalue))
         self.save_it.write("\n")
         self.save_it.close()
+
+    def guess_restart(self):
+        global wrong_guess
+        wrong_guess = 0
+        global good_guess
+        good_guess = 0
+
 
     @staticmethod
     def new_game():  # clearing it
